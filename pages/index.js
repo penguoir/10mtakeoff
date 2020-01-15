@@ -1,88 +1,45 @@
 import React from 'react'
 import Head from 'next/head'
-import Nav from '../components/nav'
+import * as firebase from 'firebase'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 
-const Home = () => (
-  <div>
+import Map from '../components/map'
+import PlayerCard from '../components/playercard'
+import format from '../modules/format'
+
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey: "AIzaSyBol24r77-dCWITDh6tc3f-wwEEH2oDL0Y",
+    authDomain: "kingalfredschool-10mtakeoff.firebaseapp.com",
+    databaseURL: "https://kingalfredschool-10mtakeoff.firebaseio.com",
+    projectId: "kingalfredschool-10mtakeoff",
+    storageBucket: "kingalfredschool-10mtakeoff.appspot.com",
+    messagingSenderId: "716459149474",
+    appId: "1:716459149474:web:011b23245bf8f66466effb"
+  })
+}
+
+export default () => {
+  const [values, loading, error] = useCollectionData(
+    firebase.firestore().collection('coords').orderBy('distance', 'desc').limit(1000),
+    { idField: '_' }
+  )
+
+  return (<>
     <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     </Head>
-
-    <Nav />
-
-    <div className="hero">
-      <h1 className="title">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
-
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
+    <div style={{width:'100%', maxHeight:'100vh', display:'flex'}}>
+      <div style={{height: '100vh', width:'70vw', display:'inline-block'}}>
+        <Map />
+      </div>
+      <div style={{height: '100vh',  width:'28vw', display:'inline-block', boxSizing:'border-box', maxHeight:'100vh', overflow:'scroll'}}>
+        {
+          values && format(values).map((x, i) =>
+             x.distance && <PlayerCard key={i} id={x.id} distance={x.distance} />
+          )
+        }
       </div>
     </div>
-
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
-
-export default Home
+  </>)
+}
