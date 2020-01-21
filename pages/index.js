@@ -21,7 +21,7 @@ if (!firebase.apps.length) {
 
 export default () => {
   const [values, loading, error] = useCollectionData(
-    firebase.firestore().collection('coords').orderBy('distance', 'desc').limit(1000),
+    firebase.firestore().collection('coords').orderBy('timestamp', 'desc').limit(1000),
     { idField: '_' }
   )
 
