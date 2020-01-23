@@ -9,20 +9,10 @@ const format = (everything) => {
           x.distance = total[x.id].distance
         }
         
-        total[x.id]['history'] =
-          total[x.id]['history']
-          ? [...total[x.id]['history'], x]
-          : [x]
         total[x.id] = x
-      } else {
-        // Otherwise, add to past places
-        total[x.id]['history'] =
-          total[x.id]['history']
-          ? [...total[x.id]['history'], x]
-          : [x]
       }
     } else {
-      console.log('id doesn\'t exist yet')
+      console.log('id doesnae exist yet')
       // If the id doesn't exist, create it. 
       total[x.id] = x
     }
