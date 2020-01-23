@@ -1,7 +1,7 @@
 const format = (everything) => {
   var obj = everything.reduce((total, x, i) => {
     if (total[x.id]) {
-      if (total[x.id].timestamp > x.timestamp) {
+      if (total[x.id].timestamp < x.timestamp) {
         // If the id was already recorded and the timestamp is more recent, replace with newer value
         
         // Check that distance exists in new one, if it doesn't, add it from previous
